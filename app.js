@@ -133,11 +133,12 @@ function authenticateToken(req, res, next) {
   });
 }
 
-// API endpoints for slip house data
-app.get('/api/slip', async (req, res) => {
+// get data for slip house from db
+app.get('/api/data-by-date', async (req, res) => {
+  const { date } = req.query;
   try {
     const [result] = await pool.query(
-      "SELECT * FROM slip_house GROUP BY date");
+      "SELECT * FROM slip_house WHERE date= ? GROUP BY date", [date]);
     res.json(result);
   } 
   catch (error) {
@@ -146,10 +147,11 @@ app.get('/api/slip', async (req, res) => {
   }
 });
 
-app.get('/api/slip1', async (req, res) => {
+app.get('/api/data-by-date2', async (req, res) => {
+  const { date } = req.query;
   try {
     const [result] = await pool.query(
-      "SELECT * FROM slip_house");
+      "SELECT * FROM slip_house WHERE date= ?", [date]);
     res.json(result);
   } 
   catch (error) {
@@ -158,14 +160,55 @@ app.get('/api/slip1', async (req, res) => {
   }
 });
 
+// insert data in slip house table
 app.post('/api/slip_data', (req, res) => {
   const { user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2 } = req.body;
   
-  const sql = 'INSERT INTO slip_house (user_id, supervisor_name, shift, date, day, standard, sieve, checktime_1, checktime_2, checktime_3, p_s_parameter, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  pool.query(sql, [user_id, supervisor_name, shift, date, day, standard, sieve, checktime_1, checktime_2, checktime_3, p_s_parameter, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2], (err, result) => {
+  const sql = 'INSERT INTO slip_house (user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2], (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
     res.json({ id: result.insertId, supervisor_name });
   });
+});
+
+//insert data in press table
+app.post('/api/press_data', (req, res) => {
+  const { user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time } = req.body;
+  
+  const sql = 'INSERT INTO press (user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ id: result.insertId, supervisor_name });
+  });
+});
+
+// get data for press from db
+app.get('/api/press-by-date', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM press WHERE date= ? GROUP BY date", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/press-by-date2', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM press WHERE date= ?", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
