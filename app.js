@@ -212,3 +212,83 @@ app.get('/api/press-by-date2', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+// insert data in GPD table
+app.post('/api/gpd_data', (req, res) => {
+  const { user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2 } = req.body;
+  
+  const sql = 'INSERT INTO gpd (user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ id: result.insertId, supervisor_name });
+  });
+});
+
+// get data for GPD from db
+app.get('/api/gpd-by-date', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM gpd WHERE date= ? GROUP BY date", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/gpd-by-date2', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM gpd WHERE date= ?", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// insert data in Glazeline table
+app.post('/api/glazeline_data', (req, res) => {
+  const { user_id, supervisor_name, shift, date, day, glaze_pickup_1, engobe_pickup_1, density_1, viscosity_1, glaze_pickup_2, engobe_pickup_2, density_2, viscosity_2, checking_time } = req.body;
+  
+  const sql = 'INSERT INTO glazeline (user_id, supervisor_name, shift, date, day, glaze_pickup_1, engobe_pickup_1, density_1, viscosity_1, glaze_pickup_2, engobe_pickup_2, density_2, viscosity_2, checking_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, glaze_pickup_1, engobe_pickup_1, density_1, viscosity_1, glaze_pickup_2, engobe_pickup_2, density_2, viscosity_2, checking_time], (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ id: result.insertId, supervisor_name });
+  });
+});
+
+// get data for Glazeline from db
+app.get('/api/glaze-by-date', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM glazeline WHERE date= ? GROUP BY date", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/glaze-by-date2', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM glazeline WHERE date= ?", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
