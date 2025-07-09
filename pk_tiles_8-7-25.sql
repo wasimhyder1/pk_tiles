@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `glazeline` (
   `density_2` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
   `viscosity_2` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
   `checking_time` varchar(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`glazeline_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
@@ -63,12 +63,14 @@ CREATE TABLE IF NOT EXISTS `gpd` (
   `tank_2` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
   `material_2` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
   `stock_2` varchar(50) COLLATE armscii8_bin DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`gpd_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 -- Dumping data for table pk_tiles_db.gpd: 0 rows
 /*!40000 ALTER TABLE `gpd` DISABLE KEYS */;
+INSERT INTO `gpd` (`gpd_id`, `user_id`, `supervisor_name`, `shift`, `date`, `day`, `write_verified_data`, `ball_mill_4`, `ball_mill_3`, `ball_mill_2`, `ball_mill_1`, `emptied_ball_mills`, `loaded_ball_mills`, `ute_stock`, `glaze_stock`, `engobe_stock`, `tank_1`, `material_1`, `stock_1`, `tank_2`, `material_2`, `stock_2`, `created_at`) VALUES
+	(1, 2, 'Ali Akbar ', 'A', '09-07-2025 ', 'Wednesday ', '', '', '', '2', '1', '', '', '1200 kg', '12 ton', '13 ton', '', '', '', '', '', '', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `gpd` ENABLE KEYS */;
 
 -- Dumping structure for table pk_tiles_db.press
@@ -87,12 +89,14 @@ CREATE TABLE IF NOT EXISTS `press` (
   `pressure_kn_3` varchar(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   `pressure_kn_4` varchar(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   `checking_time` varchar(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`press_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
 -- Dumping data for table pk_tiles_db.press: 1 rows
 /*!40000 ALTER TABLE `press` DISABLE KEYS */;
+INSERT INTO `press` (`press_id`, `user_id`, `supervisor_name`, `shift`, `date`, `day`, `thickness`, `cycle`, `size`, `pressure_kn_1`, `pressure_kn_2`, `pressure_kn_3`, `pressure_kn_4`, `checking_time`, `created_at`) VALUES
+	(1, 2, 'Wasim', 'G', '09-07-2025', 'Wednesday', '45', '86', '22', '76', '56', '23', '09', '12', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `press` ENABLE KEYS */;
 
 -- Dumping structure for table pk_tiles_db.slip_house
@@ -120,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `slip_house` (
   `moisture_2` char(50) CHARACTER SET armscii8 COLLATE armscii8_bin DEFAULT NULL,
   `p_check_time2` char(50) COLLATE armscii8_bin DEFAULT NULL,
   `checked_by` char(50) COLLATE armscii8_bin DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`article_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=armscii8 COLLATE=armscii8_bin;
 
