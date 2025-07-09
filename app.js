@@ -153,7 +153,7 @@ app.get('/api/data-by-date2', async (req, res) => {
     const [result] = await pool.query(
       "SELECT * FROM slip_house WHERE date= ?", [date]);
     res.json(result);
-  } 
+  }
   catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
