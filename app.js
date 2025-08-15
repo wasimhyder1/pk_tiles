@@ -153,7 +153,7 @@ app.get('/api/data-by-date2', async (req, res) => {
     const [result] = await pool.query(
       "SELECT * FROM slip_house WHERE date= ?", [date]);
     res.json(result);
-  }
+  } 
   catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
@@ -162,10 +162,10 @@ app.get('/api/data-by-date2', async (req, res) => {
 
 // insert data in slip house table
 app.post('/api/slip_data', (req, res) => {
-  const { user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2 } = req.body;
+  const { user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor, moisture, p_check_time } = req.body;
   
-  const sql = 'INSERT INTO slip_house (user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  pool.query(sql, [user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, write_verified_data1, write_verified_data2, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, moisture_1, p_check_time1, moisture_2, p_check_time2], (err, result) => {
+  const sql = 'INSERT INTO slip_house (user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor, moisture, p_check_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, standard, sieve, p_s_parameter, checktime_1, checktime_2, checktime_3, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor, moisture, p_check_time], (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
