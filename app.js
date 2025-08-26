@@ -175,10 +175,10 @@ app.post('/api/slip_data', (req, res) => {
 
 //insert data in press table
 app.post('/api/press_data', (req, res) => {
-  const { user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time } = req.body;
+  const { user_id, supervisor_name, shift, date, day, pressure_kn, cycle, pressure, thickness, corner_1, corner_2, corner_3, corner_4, tile_center, checking_time } = req.body;
   
-  const sql = 'INSERT INTO press (user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  pool.query(sql, [user_id, supervisor_name, shift, date, day, thickness, cycle, size, pressure_kn_1, pressure_kn_2, pressure_kn_3, pressure_kn_4, checking_time], (err, result) => {
+  const sql = 'INSERT INTO press (user_id, supervisor_name, shift, date, day, pressure_kn, cycle, pressure, thickness, corner_1, corner_2, corner_3, corner_4, tile_center, checking_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, pressure_kn, cycle, pressure, thickness, corner_1, corner_2, corner_3, corner_4, tile_center, checking_time], (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -215,10 +215,10 @@ app.get('/api/press-by-date2', async (req, res) => {
 
 // insert data in GPD table
 app.post('/api/gpd_data', (req, res) => {
-  const { user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2 } = req.body;
+  const { user_id, supervisor_name, shift, date, day, checktime, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor } = req.body;
   
-  const sql = 'INSERT INTO gpd (user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  pool.query(sql, [user_id, supervisor_name, shift, date, day, write_verified_data, ball_mill_4, ball_mill_3, ball_mill_2, ball_mill_1, emptied_ball_mills, loaded_ball_mills, ute_stock, glaze_stock, engobe_stock, tank_1, material_1, stock_1, tank_2, material_2, stock_2], (err, result) => {
+  const sql = 'INSERT INTO gpd (user_id, supervisor_name, shift, date, day, checktime, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  pool.query(sql, [user_id, supervisor_name, shift, date, day, checktime, ball_mill_no, density, viscosity, residue, silos_no, stock, wall_floor], (err, result) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
@@ -285,6 +285,33 @@ app.get('/api/glaze-by-date2', async (req, res) => {
   try {
     const [result] = await pool.query(
       "SELECT * FROM glazeline WHERE date= ?", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// get data from combine tables for combine report from db
+app.get('/api/combine-by-date', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM slip_house s INNER JOIN press p ON s.date = p.date INNER JOIN gpd g ON s.date = g.date INNER JOIN glazeline c ON s.date = c.date WHERE s.date= ? GROUP BY s.date", [date]);
+    res.json(result);
+  } 
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+app.get('/api/combine-by-date2', async (req, res) => {
+  const { date } = req.query;
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM slip_house s INNER JOIN press p ON s.date = p.date INNER JOIN gpd g ON s.date = g.date INNER JOIN glazeline c ON s.date = c.date WHERE s.date= ?", [date]);
     res.json(result);
   } 
   catch (error) {
